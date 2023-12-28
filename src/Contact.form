@@ -135,7 +135,9 @@
                     <preferred-size width="150" height="50"/>
                   </grid>
                 </constraints>
-                <properties/>
+                <properties>
+                  <gridColor color="-788993"/>
+                </properties>
               </component>
             </children>
           </grid>

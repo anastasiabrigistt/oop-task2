@@ -42,6 +42,9 @@ public class Contact extends JDialog {
         approveButton.setBackground(new Color(43, 43, 43));
         denyButton.setBackground(new Color(43, 43, 43));
         ageSpinner.setBackground(new Color(60, 63, 65));
+        markedPeople.setBackground(new Color(60, 63, 65));
+        markedList.setBackground(new Color(60, 63, 65));
+        markedList.setForeground(Color.white);
         nameField.setText("Для продолжение выберите фильтры и нажмите на галочку");
         filteredPersons = new ArrayList<>();
         approveButton.addActionListener(new ActionListener() {
@@ -54,6 +57,9 @@ public class Contact extends JDialog {
                 } else {
                     if (currentPersonIndex < filteredPersons.size()) {
                         sentRequests.add(filteredPersons.get(currentPersonIndex));
+                        for (Person p : sentRequests){
+                            System.out.println(p.getName());
+                        }
                         currentPersonIndex++;
                         updateUI();
                     }
@@ -108,7 +114,7 @@ public class Contact extends JDialog {
     private List<Person> filtered(List<Person> persons, String gender, int age) {
         List<Person> output = new ArrayList<>();
         for (Person p : persons) {
-            if (gender.equals(p.getGender()) && age <= p.getAge()) {
+            if ((gender.equals(p.getGender()) || gender.equals("Не важно")) && age <= p.getAge()) {
                 output.add(p);
             }
         }
@@ -121,15 +127,23 @@ public class Contact extends JDialog {
             Person currentPerson = filteredPersons.get(currentPersonIndex);
             nameField.setText(currentPerson.getName());
             infoField.setText("Обо мне: " + currentPerson.getShortInfo() + " Мои интересы: " + currentPerson.getInterest());
-
             Image scaledImage = currentPerson.getAvatar().getImage().getScaledInstance(400, 600, Image.SCALE_SMOOTH);
             ImageIcon resizedIcon = new ImageIcon(scaledImage);
             iconLabel.setIcon(resizedIcon);
-
+            markedList.setVisible(true);
+            JTableUtils.writeArrayToJTable(markedList, getInfoFromList(sentRequests));
         } else {
             nameField.setText("Анкеты с данным фильтрами кончились!");
             currentPersonIndex = -1;
         }
+    }
+    private String[][] getInfoFromList(List<Person> persons){
+        String[][] out = new String[persons.size()][5];
+        for (int i = 0; i< out.length; i++){
+                String[] temp = new String[]{persons.get(i).getName(),String.valueOf(persons.get(i).getAge()),persons.get(i).getGender(),persons.get(i).getInterest(),persons.get(i).getInterest()};
+                out[i] = temp;
+            }
+        return out;
     }
 
 }
